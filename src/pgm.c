@@ -37,6 +37,7 @@ pgm* pgm_read_asc(char* fname){
         return NULL;
     }
     int c = fgetc(f);
+    c = fgetc(f);
     while(c == '#'){
         while(c != '\n' && c != EOF){
             c = fgetc(f);
