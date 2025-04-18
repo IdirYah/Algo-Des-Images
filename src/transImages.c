@@ -96,3 +96,16 @@ pgm* rotation_pgm(pgm* p,double theta,int x0,int y0){
     }
     return img;
 }
+//----------------
+pgm* pgm_zoom(pgm* image, double lambda, int x0, int y0,int Dx,int Dy){
+    if(image == NULL || lambda == 0.0) return NULL;
+    pgm* p = pgm_alloc(Dx,Dy,image->max_value);
+    for(int i=0;i<Dx;i++){
+        for(int j=0;j<Dy;j++){
+            double x = (i-x0)/lambda; 
+            double y = (j-y0)/lambda;
+            p->pixels[i][j] = interpolation_pgm(image,x,y);
+        }
+    }
+    return p;
+}
