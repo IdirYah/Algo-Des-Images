@@ -109,3 +109,17 @@ pgm* pgm_zoom(pgm* image, double lambda, int x0, int y0,int Dx,int Dy){
     }
     return p;
 }
+//------------------
+pgm* pgm_shear(pgm* image,double cx,double cy,int Dx,int Dy){
+    double den = 1 - cx*cy;
+    if(image == NULL || den == 0) return NULL;
+    pgm* p = pgm_alloc(Dx,Dy,image->max_value);
+    for(int i=0;i<Dx;i++){
+        for(int j=0;j<Dy;j++){
+            double x = (i - cx*j)/den;
+            double y = (j - cy*i)/den;
+            p->pixels[i][j] = interpolation_pgm(image,x,y);
+        }
+    }
+    return p;
+}

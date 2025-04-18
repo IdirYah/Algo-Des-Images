@@ -12,5 +12,6 @@ double B3(double);
 unsigned char interpolation_pgm(pgm*,double,double);
 pgm* rotation_pgm(pgm*,double,int,int);
 pgm* pgm_zoom(pgm*,double,int,int,int,int);
+pgm* pgm_shear(pgm* image,double,double,int,int);
 //--------------
 #endif 

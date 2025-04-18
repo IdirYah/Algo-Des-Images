@@ -7,7 +7,7 @@
 //----------------
 int main(){
     pgm* p = pgm_read_asc("data/eye_s_asc.pgm");
-    pgm* image = pgm_zoom(p,3,0,0,p->height,p->width);
-    pgm_write_bin("data/zoomPGM.pgm",image);
+    pgm* image = pgm_shear(p,0.4,0.2,p->height*2-100,p->width*2-100);
+    pgm_write_asc("data/shearPGM.pgm",image);
     return 0;
 }
