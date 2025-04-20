@@ -12,5 +12,7 @@ pgm* filtreSobel(pgm*);
 double gaussian(double,double);
 double** calculerKernel(double,int);
 void gaussian_blur(pgm*,double,int);
+double **gradient_angle(pgm*,pgm*);
+void non_maxima_suppression(pgm*,double**);
 //----------------------
 #endif 
