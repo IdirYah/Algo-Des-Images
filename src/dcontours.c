@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include "../include/dcontours.h"
 #include "../include/pgm.h"
@@ -79,4 +80,56 @@ pgm* filtreSobel(pgm* p){
     pgm* img = norme(p1,p2);
     img = naive_edge_detector(img);
     return img;
+}
+//-----------------
+double gaussian(double x,double sigma){
+    return exp(-(x*x)/(2*sigma*sigma))/(sigma*sqrt(2*M_PI));
+}
+//-----------------
+double** calculerKernel(double sigma,int n){
+    double** kernel;
+    double sum = 0.0;
+    kernel = (double**)malloc(n*sizeof(double*));
+    for(int i=0;i<n;i++){
+        kernel[i] = (double*)malloc(n*sizeof(double));
+    }
+    int p = n/2;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            double x = i - p;
+            double y = j - p;
+            kernel[i][j] = gaussian(x,sigma)*gaussian(y,sigma);
+            sum = sum + kernel[i][j];
+        }
+    }
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            kernel[i][j] /= sum;
+        }
+    }
+    return kernel;
+}
+//-------------
+void gaussian_blur(pgm* image,double sigma,int n){
+    int p = n/2;
+    double ** kernel = calculerKernel(sigma,n);
+    pgm* copy = pgm_alloc(image->height,image->width,image->max_value);
+    for(int i=0;i<image->height;i++){
+        for(int j=0;j<image->width;j++){
+            copy->pixels[i][j] = image->pixels[i][j];
+        }
+    }
+    for(int i=p;i<image->height-p;i++){
+        for(int j=p;j<image->width-p;j++){
+            double sum = 0.0;
+            for(int k=-p;k<=p;k++){
+                for(int l=-p;l<=p;l++){
+                    sum = sum + kernel[k+p][l+p]*copy->pixels[i+k][j+l];
+                }
+            }
+            int pixel_value = (int)round(sum+0.5);
+            pixel_value = (pixel_value > 255) ? 255 : ((pixel_value < 0) ? 0 : pixel_value);
+            image->pixels[i][j] = (unsigned char)pixel_value;
+        }
+    }
 }
